@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+    httpd:
+        ports:
+            - '8080:80'
+            - '8443:443'
+        volumes:
+            - '/home/ubuntu/apache/certs:/usr/local/apache2/conf/'
+            - '/home/ubuntu/apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf'
+            - '/home/ubuntu/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf'
+            - '/home/ubuntu/apache/html:/usr/local/apache2/htdocs/'
+        image: 'httpd:2.4'

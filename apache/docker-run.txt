@@ -1,0 +1,1 @@
+docker run -p 8080:80 -p 8443:443 -v /home/ubuntu/apache/certs:/usr/local/apache2/conf/ -v /home/ubuntu/apache/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf -v /home/ubuntu/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf  httpd:2.4
