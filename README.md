@@ -1,16 +1,16 @@
 
 
-#Certificados AutoFirmados
+# Certificados AutoFirmados
 Se necesita que el equipo cuente con openSSL
 Se guardan con los nombres de:
     server.key
     server.crt
 Ya que de esa manera los consume el servidor apache
 
-###Para generarlos se siguen estos pasos:
+### Para generarlos se siguen estos pasos:
 
-###***Paso 1***
-ejecutar el comando este genera el server.key
+### ***Paso 1***
+Ejecutar el comando este genera el server.key
 ```
 openssl genrsa -out server.key 2048
 ```
@@ -20,7 +20,8 @@ openssl genrsa -out server.key 2048
 
 ***Para un certificado Autofirmado Desplegado en ImagenDocker se recomienda no poner pass ya que te pedira ingresar el pass y no dejara desplegar la imagen***
 
-![Error phasshare](/imag/errorPhass.png)
+
+![Error phasshare](/IMAG/errorPhass.png)
 Aqui solo se comenta un cifrado de 2048bits
 
 Se genera un archivo server.csr este archivo es el que generalmente se manda ala Entidad Certificadora para generar el certificado
@@ -43,9 +44,10 @@ Con este comando se genera el certificado autofirmado
 ```
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 ```
-Si corres este te saltas un paso anterior y solo generas el key y crt
 
-###***Paso 2***
+
+### ***Paso 2***
+Utilizamos el siguiente codigo para generar el certificado crt
 ```
 openssl req -new -x509 -nodes -sha1 -days 365 -key server.key -out server.crt -extensions usr_cert
 ```
@@ -57,7 +59,7 @@ Los certificados deben guardarse en el siguiente path
 ```
 /usr/local/apache2/conf/
 ```
-#Activar el uso de SSL en Apache
+# Activar el uso de SSL en Apache
 
 
 Se modifica los siguientes parametros para aceptar los certificados
@@ -124,8 +126,7 @@ COPY httpd-ssl.conf /usr/local/apache2/conf/extra/httpd-ssl.conf
 ```
 Dando como resultado la muestra del CertificadoAutofirmado
 
-![CertificadoAutofirmado](/imag/Cert.png)
-
+![CertificadoAutofirmado](/IMAG/Cert.png)
 
 
 Los archivos para mostrar se guardan en el siguiente path
@@ -133,19 +134,20 @@ Los archivos para mostrar se guardan en el siguiente path
 /usr/local/apache2/htdocs
 ```
 
+![CertificadoAutofirmado](/IMAG/htdocs.png)
 
-![CertificadoAutofirmado](/imag/htdocs.png)
+Aqui se muestra la info del certificado y la fecha de expiracion
 
-![CertificadoAutofirmado](/imag/CertificadoAutofirmado.png)
+![CertificadoAutofirmado](/IMAG/CertificadoAutofirmado.png)
 
 
 Docker image httpd:2.4
-OpenSSL 3.0.2 15 Mar 2022
+OpenSSL 3.0.2 
 
-
+:+1:
 ----------------------------------------------------------------
 
-##Letsencrypt
+## Letsencrypt
 
 AutoridadCertificadora
  - Hacer renovaciones cada 90 dias
@@ -154,7 +156,7 @@ AutoridadCertificadora
    - El mas usual es Cerbot
    - https://letsencrypt.org/es/docs/client-options/
 
-![Descripción de la imagen](/imag/cerbot.png)
+![cerbot](/IMAG/cerbot.png)
 
 El objetivo de Let’s Encrypt y el protocolo ACME es hacer posible configurar un servidor HTTPS y permitir que este genere automáticamente un certificado válido para navegadores, sin ninguna intervención humana. Esto se logra ejecutando un agente de administración de certificados en el servidor web.
 
@@ -172,13 +174,13 @@ Provisionar un record DNS record bajo example.com, ó
 Provisionar un recurso HTTP bajo un well-known URI en http://example.com/
 Junto con los retos, el Let’s Encrypt CA también provee un nonce que el agente debe firmar con su par de llave privada para demostrar que controla el par de llaves.
 
-![Descripción de la imagen](/imag/howitworks_challenge.png)
+![letsencrypt](/IMAG/howitworks_challenge.png)
 
 El software de agente completa uno de los conjuntos de retos proveidos. Digamos que es capaz de realizar la segunda tarea anterior: crea un archivo en un path especifico en el site http://example.com. El agente también firma el nonce proveído con su llave privada. Una vez el agente ha completado estos pasos, notifica la AC que está listo para completar la validación.
 
 Luego, es el trabajo de la AC verificar los que retos han sido satisfechos. La AC verifica la firma en el nonce, e intenta descargar un archivo del servidor web y hacerse seguro que recibió el contenido esperado.
 
-![Descripción de la imagen](/imag/howitworks_authorization.png)
+![letsencrypt](/IMAG/howitworks_authorization.png)
 
 Si la firma sobre el nonce es válida, y los retos son válidos, entonces el agente identificado por su llave pública está autorizado a realizar la gestión de certificados para example.com. Llamamos el par de llaves que el agente usó un “par de llaves autorizado” para example.com.
 
@@ -189,14 +191,14 @@ Para obtener un certificado para un dominio, el agente construye un PKCS#10 Cert
 
 Cuando el Let’s Encrypt CA recibe una solicitud, verifica ambas firmas. Si todo se ve bien, emite un certificado para example.com con la llave pública del CSR y lo devuelve al agente.
 
-![Descripción de la imagen](/imag/howitworks_certificate.png)
+![letsencrypt](/IMAG/howitworks_certificate.png)
 
 Revocación funciona de una manera similar. El agent firma una solicitud de revocación con el par de llaves autorizado para example.com, y el Let’s Encrypt CA verifica que la solicitud es autorizada. Si lo es, publica información de revocación a los canales normales de revocación (i.e. OCSP), para que los confiados tales como navegadores pueden saber que no deben aceptar el certificado recovado.
 
-![Descripción de la imagen](/imag/howitworks_revocation.png)
+![letsencryptn](/IMAG/howitworks_revocation.png)
 
 
-#Requisitos
+# Requisitos
 
     Tener un dominio
 
@@ -206,7 +208,7 @@ Revocación funciona de una manera similar. El agent firma una solicitud de revo
         Haproxy
         Plesk
 
-    System
+    Sobre que Systema
         Ubuntu
         Fedora
         Web Hosting Service
@@ -214,53 +216,57 @@ Revocación funciona de una manera similar. El agent firma una solicitud de revo
         Centos
         RHEL8
 
-    Intalar cerbot en el servidor Ubuntu
+    Intalar cerbot en el servidor Elejido
 
 Install Certbot
-Run this command on the command line on the machine to install Certbot.
+Ejecuar comando para instalar cerbot va cambiar dependiedo que systema se tenga este caso es un Ubuntu.
 ```
 sudo snap install --classic certbot
 ```
 Prepare the Certbot command
-Execute the following instruction on the command line on the machine to ensure that the certbot command can be run.
+Comprobamos que se pueda ejecutar cerbot desde el path.
 ```
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 
-Generar un certificado para nginx
+Generar un certificado, en este caso para nginx
 ```
 sudo certbot --nginx -d dominio
 ```
+Para apache quedaria asi
+```
+sudo certbot --apache -d dominio
+```
 Llenaras una serie de configuraciones datos para que aparezcan en tu certificado
 
-![Cerbot agregar dominio](/imag/001.png)
+![gernerar certificado](/IMAG/001.png)
 
 
 Elijes el tipo de configuracion si quieres que te redirija a https
 
-![config](/imag/002.png)
+![config](/IMAG/002.png)
 
 Aqui muestra en que directorio queda guardado
-![config](/imag/003.png)
+![config](/IMAG/003.png)
 
 En tu archivo de configuracion es donde ***Cerbot*** añade los parametros de validacion
 
-![config](/imag/004.png)
+![config](/IMAG/004.png)
 
 Genera un ***cronjob*** para renovar el certificado
 
-![config](/imag/006.png)
+![config](/IMAG/006.png)
 
 
 Aqui ya se ve el certificado en funcion y con expiracion de 90 dias
 
-![config](/imag/007.png)
+![config](/IMAG/007.png)
 
 Este comando haria una comprobacion de como estan los certificados no modifica nada
 
 ```
 sudo certbot renew --dry-run
 ```
-![config](/imag/005.png)
+![config](/IMAG/005.png)
 
-El certificado ya se encuentra activo
+El certificado ya se encuentra activo :+1:
